@@ -66,7 +66,11 @@ export default function DarkModeToggle() {
 
         .toggle-slider {
           position: absolute;
+<<<<<<< HEAD
           top: 3px;
+=======
+          top: 2px;
+>>>>>>> main
           left: ${darkMode ? '28px' : '2px'};
           width: 24px;
           height: 24px;
