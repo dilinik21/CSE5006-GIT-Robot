@@ -1,0 +1,39 @@
+/* Hamburger Menu */
+.hamburger-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  cursor: pointer;
+}
+
+.hamburger-line {
+  width: 25px;
+  height: 3px;
+  background: white;
+  border-radius: 2px;
+}
+
+/* Menu Overlay */
+.menu-overlay {
+  position: absolute;
+  top: 95px;
+  right: 20px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  min-width: 150px;
+  z-index: 999;
+}
+
+.menu-item {
+  padding: 10px 20px;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+  color: #2c3e50;
+}
+
+.menu-item:hover {
+  background: #f0f0f0;
+}
