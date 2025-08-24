@@ -5,7 +5,7 @@ import HeaderWithCookie from "./components/HeaderWithCookie";
 
 export const metadata = {
   title: "Git Helper Web App",
-  description: "Next.js Assignment 1 - Git Helper",
+  description: "Assignment 1 - Git Helper",
 };
 
 export default function RootLayout({
@@ -19,7 +19,7 @@ export default function RootLayout({
         style={{
           display: "flex",
           flexDirection: "column",
-          minHeight: "100vh", // full viewport height
+          minHeight: "100vh",
         }}
       >
         <Header />
