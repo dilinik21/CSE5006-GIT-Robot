@@ -1,19 +1,11 @@
-import DarkModeToggle from "./components/DarkModeToggle";
+import Breadcrumbs from "./components/Breadcrumbs";
+import GitCommandHelper from "./components/GitCommandHelper";
 
 export default function Home() {
   return (
     <>
-      <div
-        className="breadcrumb"
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <span>Home {">"} Git Helper</span>
-        <DarkModeToggle />
-      </div>
+      <Breadcrumbs paths={["Home", "Git Helper"]} />
+      <GitCommandHelper />
     </>
   );
 }

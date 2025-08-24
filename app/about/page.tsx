@@ -1,19 +1,9 @@
-  import DarkModeToggle from "../components/DarkModeToggle";
+import Breadcrumbs from "../components/Breadcrumbs";
 
 export default function AboutPage() {
   return (
     <>
-      <div
-        className="breadcrumb"
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <span>Home {">"} About</span>
-        <DarkModeToggle />
-      </div>
+      <Breadcrumbs paths={["Home", "About"]} />
 
       <main
         style={{

@@ -5,8 +5,14 @@ body {
 }
 
 /* Themes */
-body.light { background: #f8f9fa; color: #2c3e50; }
-body.dark { background: #2c3e50; color: #f8f9fa; }
+body.light {
+  background: #f8f9fa;
+  color: #2c3e50;
+}
+body.dark {
+  background: #2c3e50;
+  color: #3e6c9a;
+}
 
 /* Header */
 .header-mockup {
@@ -19,7 +25,9 @@ body.dark { background: #2c3e50; color: #f8f9fa; }
   position: relative;
 }
 
-.student-number { font-weight: bold; }
+.student-number {
+  font-weight: bold;
+}
 
 /* Footer */
 .footer {
