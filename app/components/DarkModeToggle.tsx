@@ -87,7 +87,7 @@ export default function DarkModeToggle() {
         .toggle-text {
           font-size: 14px;
           font-weight: 500;
-          color: ${darkMode ? '#f7fafc' : '#2d3748'};
+          color: #2d3748;
           user-select: none;
         }
 
