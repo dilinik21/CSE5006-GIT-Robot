@@ -27,7 +27,9 @@ export default function HeaderWithCookie() {
 
   // Save tab to cookie
   useEffect(() => {
-    document.cookie = `activeTab=${activeTab}; path=/; max-age=${60 * 60 * 24 * 30}`;
+    document.cookie = `activeTab=${activeTab}; path=/; max-age=${
+      60 * 60 * 24 * 30
+    }`;
   }, [activeTab]);
 
   const handleItemClick = (name: string) => {
@@ -35,24 +37,29 @@ export default function HeaderWithCookie() {
   };
 
   return (
-    <header style={{
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      background: "#2c3e50",
-      color: "white",
-      padding: "10px 20px"
-    }}>
-      
-      {/* Desktop Navigation */}
+    <header
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        background: "#2c3e50",
+        color: "white",
+        padding: "10px 20px",
+      }}
+    >
       <nav style={{ display: "flex", gap: "20px" }}>
         {menuItems.map((item) => (
-          <Link key={item.name} href={item.path} style={{ textDecoration: "none" }}>
+          <Link
+            key={item.name}
+            href={item.path}
+            style={{ textDecoration: "none" }}
+          >
             <div
               style={{
                 cursor: "pointer",
                 fontWeight: activeTab === item.name ? "bold" : "normal",
-                borderBottom: activeTab === item.name ? "2px solid #3498db" : "none",
+                borderBottom:
+                  activeTab === item.name ? "2px solid #3498db" : "none",
                 color: "white",
                 padding: "5px 0",
               }}
@@ -63,7 +70,7 @@ export default function HeaderWithCookie() {
           </Link>
         ))}
       </nav>
-      
+
       <HamburgerMenu />
     </header>
   );

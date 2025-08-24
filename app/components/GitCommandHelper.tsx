@@ -10,7 +10,10 @@ export default function GitCommandHelper() {
     owner: "",
     repository: "",
   });
-  const [output, setOutput] = useState<{ text: string; success: boolean } | null>(null);
+  const [output, setOutput] = useState<{
+    text: string;
+    success: boolean;
+  } | null>(null);
   const [commandPreview, setCommandPreview] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,7 +51,10 @@ git push origin update-readme`;
       const data = await res.json();
 
       if (data.success) {
-        setOutput({ text: `Commands executed successfully\n\n📄`, success: true });
+        setOutput({
+          text: `Commands executed successfully\n\n📄`,
+          success: true,
+        });
       } else {
         setOutput({ text: `Error: ${data.error}`, success: false });
       }
@@ -125,7 +131,7 @@ git push origin update-readme`;
           </h2>
           <pre
             className={styles.commandBox}
-            style={{ minWidth:"700px", whiteSpace: "pre-wrap" }}
+            style={{ minWidth: "700px", whiteSpace: "pre-wrap" }}
           >
             {commandPreview}
             {output && (

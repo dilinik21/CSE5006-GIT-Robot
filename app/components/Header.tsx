@@ -1,8 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import DarkModeToggle from "./DarkModeToggle";
-
 export default function Header() {
   return (
     <header className="header-mockup">

@@ -7,7 +7,6 @@ const HamburgerMenu = () => {
 
   return (
     <div>
-      {/* Hamburger Icon */}
       <div
         className={styles["hamburger-menu"]}
         onClick={() => setIsOpen(!isOpen)}
@@ -17,7 +16,6 @@ const HamburgerMenu = () => {
         <div className={styles["hamburger-line"]}></div>
       </div>
 
-      {/* Menu Overlay */}
       {isOpen && (
         <div className={styles["menu-overlay"]}>
           <a href="/" className={styles["menu-item"]}>
