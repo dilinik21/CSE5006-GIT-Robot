@@ -1,3 +1,4 @@
+//got assist from chatgpt
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -31,7 +32,7 @@ export default function GitCommandHelper() {
 git clone https://${username}:${token}@github.com/${owner}/${repository}.git "${cloneFolder}"
 cd "${cloneFolder}"
 git checkout -b update-readme
-echo "## This is the System by ${username}" >> README.md
+echo "## This is the System" >> README.md
 git add README.md
 git commit -m "Update README.md: Added by ${username}"
 git push origin update-readme`;
@@ -52,7 +53,7 @@ git push origin update-readme`;
 
       if (data.success) {
         setOutput({
-          text: `Commands executed successfully\n\n📄`,
+          text: `Commands executed successfully\n\n`,
           success: true,
         });
       } else {
@@ -71,7 +72,6 @@ git push origin update-readme`;
       </p>
 
       <div className={styles.content}>
-        {/* Left: form */}
         <form onSubmit={(e) => e.preventDefault()}>
           <div className={styles.formGroup}>
             <label>GitHub Username</label>
@@ -124,7 +124,6 @@ git push origin update-readme`;
           </div>
         </form>
 
-        {/* Right: Command preview + Output */}
         <div>
           <h2 className={styles.commandsTitle}>
             Generated Git Command Preview
