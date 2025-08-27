@@ -5,13 +5,11 @@ import { useState, useEffect } from "react";
 export default function DarkModeToggle() {
   const [darkMode, setDarkMode] = useState(false);
 
-  // Check localStorage for theme preference
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") setDarkMode(true);
   }, []);
 
-  // Apply theme class to body
   useEffect(() => {
     document.body.className = darkMode ? "dark" : "light";
     localStorage.setItem("theme", darkMode ? "dark" : "light");

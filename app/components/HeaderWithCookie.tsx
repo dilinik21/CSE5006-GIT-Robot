@@ -14,7 +14,6 @@ const menuItems = [
 export default function HeaderWithCookie() {
   const [activeTab, setActiveTab] = useState("Home");
 
-  // Load last active tab from cookie
   useEffect(() => {
     const savedTab = document.cookie
       .split("; ")
@@ -25,7 +24,6 @@ export default function HeaderWithCookie() {
     }
   }, []);
 
-  // Save tab to cookie
   useEffect(() => {
     document.cookie = `activeTab=${activeTab}; path=/; max-age=${
       60 * 60 * 24 * 30
