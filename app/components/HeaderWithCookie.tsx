@@ -1,6 +1,8 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import HamburgerMenu from "./HamburgerMenu";
 
 const menuItems = [
@@ -12,29 +14,27 @@ const menuItems = [
 ];
 
 export default function HeaderWithCookie() {
+  const pathname = usePathname();
   const [activeTab, setActiveTab] = useState("Home");
 
-  // Load last active tab from cookie
   useEffect(() => {
-    const savedTab = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("activeTab="))
-      ?.split("=")[1];
-    if (savedTab && menuItems.some((item) => item.name === savedTab)) {
-      setActiveTab(savedTab);
+    const currentItem = menuItems.find((item) => item.path === pathname);
+    if (currentItem) {
+      setActiveTab(currentItem.name);
+      
+      document.cookie = `activeTab=${currentItem.name}; path=/; max-age=${
+        60 * 60 * 24 * 30
+      }`;
+    } else {
+      const savedTab = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("activeTab="))
+        ?.split("=")[1];
+      if (savedTab && menuItems.some((item) => item.name === savedTab)) {
+        setActiveTab(savedTab);
+      }
     }
-  }, []);
-
-  // Save tab to cookie
-  useEffect(() => {
-    document.cookie = `activeTab=${activeTab}; path=/; max-age=${
-      60 * 60 * 24 * 30
-    }`;
-  }, [activeTab]);
-
-  const handleItemClick = (name: string) => {
-    setActiveTab(name);
-  };
+  }, [pathname]);
 
   return (
     <header
@@ -49,21 +49,15 @@ export default function HeaderWithCookie() {
     >
       <nav style={{ display: "flex", gap: "20px" }}>
         {menuItems.map((item) => (
-          <Link
-            key={item.name}
-            href={item.path}
-            style={{ textDecoration: "none" }}
-          >
+          <Link key={item.name} href={item.path} style={{ textDecoration: "none" }}>
             <div
               style={{
                 cursor: "pointer",
                 fontWeight: activeTab === item.name ? "bold" : "normal",
-                borderBottom:
-                  activeTab === item.name ? "2px solid #3498db" : "none",
+                borderBottom: activeTab === item.name ? "2px solid #3498db" : "none",
                 color: "white",
                 padding: "5px 0",
               }}
-              onClick={() => handleItemClick(item.name)}
             >
               {item.name}
             </div>

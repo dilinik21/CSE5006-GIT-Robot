@@ -1,3 +1,4 @@
+//got assist from chatgpt
 import { NextResponse } from "next/server";
 import { execSync } from "child_process";
 import path from "path";
@@ -22,7 +23,7 @@ export async function POST(req: Request) {
     }
 
     const readmePath = path.join(cloneFolder, "README.md");
-    fs.appendFileSync(readmePath, `\n## This is the System by ${username}\n`);
+    fs.appendFileSync(readmePath, `\n## This is the System\n`);
 
     execSync(`git add README.md`, { cwd: cloneFolder });
     execSync(`git commit -m "Update README.md: Added by ${username}"`, { cwd: cloneFolder });
