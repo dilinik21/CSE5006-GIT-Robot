@@ -40,29 +40,47 @@ git push origin update-readme`;
     setCommandPreview(preview);
   }, [formData]);
 
-  const handleExecute = async () => {
-    setOutput({ text: "Executing...", success: true });
-    try {
-      const res = await fetch("/api/execute", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+const handleExecute = async () => {
+  setOutput({ text: "Executing...", success: true });
+  try {
+    // 1️⃣ Run your tutor-provided execute script
+    const res = await fetch("/api/execute", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+    const data = await res.json();
+
+    // 2️⃣ Save this action to your database
+    await fetch("/api/commands", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: formData.username,
+        token: formData.token,
+        owner: formData.owner,
+        repo: formData.repository,
+        command: commandPreview,
+      }),
+    });
+
+    // 3️⃣ Show success message
+    if (data.success) {
+      setOutput({
+        text: `Commands executed and saved successfully ✅`,
+        success: true,
       });
-
-      const data = await res.json();
-
-      if (data.success) {
-        setOutput({
-          text: `Commands executed successfully\n\n`,
-          success: true,
-        });
-      } else {
-        setOutput({ text: `Error: ${data.error}`, success: false });
-      }
-    } catch (err: any) {
-      setOutput({ text: `Failed: ${err.message}`, success: false });
+    } else {
+      setOutput({
+        text: `Execution failed: ${data.error}`,
+        success: false,
+      });
     }
-  };
+  } catch (err: any) {
+    setOutput({ text: `Failed: ${err.message}`, success: false });
+  }
+};
+
 
   return (
     <div className={styles.container}>
