@@ -1,4 +1,4 @@
-//got assist from chatgpt
+// got assist from ChatGPT
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -11,10 +11,10 @@ export default function GitCommandHelper() {
     owner: "",
     repository: "",
   });
-  const [output, setOutput] = useState<{
-    text: string;
-    success: boolean;
-  } | null>(null);
+  const [orm, setOrm] = useState<"prisma" | "sequelize">("prisma");
+  const [output, setOutput] = useState<{ text: string; success: boolean } | null>(
+    null
+  );
   const [commandPreview, setCommandPreview] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,47 +40,47 @@ git push origin update-readme`;
     setCommandPreview(preview);
   }, [formData]);
 
-const handleExecute = async () => {
-  setOutput({ text: "Executing...", success: true });
-  try {
-    // 1️⃣ Run your tutor-provided execute script
-    const res = await fetch("/api/execute", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
-    const data = await res.json();
-
-    // 2️⃣ Save this action to your database
-    await fetch("/api/commands", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: formData.username,
-        token: formData.token,
-        owner: formData.owner,
-        repo: formData.repository,
-        command: commandPreview,
-      }),
-    });
-
-    // 3️⃣ Show success message
-    if (data.success) {
-      setOutput({
-        text: `Commands executed and saved successfully ✅`,
-        success: true,
+  const handleExecute = async () => {
+    setOutput({ text: "Executing...", success: true });
+    try {
+      // 1️⃣ Run tutor-provided execute script
+      const res = await fetch("/api/execute", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
-    } else {
-      setOutput({
-        text: `Execution failed: ${data.error}`,
-        success: false,
+      const data = await res.json();
+
+      // 2️⃣ Save this action to database using selected ORM
+      await fetch("/api/commands", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: formData.username,
+          token: formData.token, // masked server-side
+          owner: formData.owner,
+          repo: formData.repository,
+          command: commandPreview,
+          orm, // tell server which ORM to use
+        }),
       });
+
+      // 3️⃣ Show success message
+      if (data.success) {
+        setOutput({
+          text: `Commands executed and saved successfully ✅ (${orm.toUpperCase()})`,
+          success: true,
+        });
+      } else {
+        setOutput({
+          text: `Execution failed: ${data.error}`,
+          success: false,
+        });
+      }
+    } catch (err: any) {
+      setOutput({ text: `Failed: ${err.message}`, success: false });
     }
-  } catch (err: any) {
-    setOutput({ text: `Failed: ${err.message}`, success: false });
-  }
-};
-
+  };
 
   return (
     <div className={styles.container}>
@@ -131,6 +131,32 @@ const handleExecute = async () => {
             />
           </div>
 
+          <div className={styles.formGroup}>
+            <label>ORM</label>
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <label>
+                <input
+                  type="radio"
+                  name="orm"
+                  value="prisma"
+                  checked={orm === "prisma"}
+                  onChange={() => setOrm("prisma")}
+                />{" "}
+                Prisma
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="orm"
+                  value="sequelize"
+                  checked={orm === "sequelize"}
+                  onChange={() => setOrm("sequelize")}
+                />{" "}
+                Sequelize
+              </label>
+            </div>
+          </div>
+
           <div className={styles.buttonRow}>
             <button
               type="button"
@@ -143,9 +169,7 @@ const handleExecute = async () => {
         </form>
 
         <div>
-          <h2 className={styles.commandsTitle}>
-            Generated Git Command Preview
-          </h2>
+          <h2 className={styles.commandsTitle}>Generated Git Command Preview</h2>
           <pre
             className={styles.commandBox}
             style={{ minWidth: "700px", whiteSpace: "pre-wrap" }}
