@@ -24,7 +24,6 @@ export function middleware(req: NextRequest) {
   return res
 }
 
-// Optional: run for all routes (default)
 export const config = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 }
