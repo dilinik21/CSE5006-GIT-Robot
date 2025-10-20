@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "prisma generate",
+    "test": "playwright test",
+    "test:api": "playwright test tests/api.spec.ts",
+    "test:all": "playwright test tests/*.spec.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.17.1",

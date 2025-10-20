@@ -12,9 +12,36 @@ function pickOrm(reqOrm?: string) {
 
 export async function GET() {
   try {
-    const { prisma } = await import('@/lib/orm/prisma'); // lazy
-    const rows = await prisma.gitCommand.findMany({ orderBy: { id: 'desc' }, take: 100 });
-    return NextResponse.json(rows);
+    const { prisma } = await import('@/lib/orm/prisma');
+
+    try {
+      const rows = await prisma.gitCommand.findMany({
+        orderBy: { id: 'desc' },
+        take: 100,
+      });
+      return NextResponse.json(rows);
+    } catch {
+      // fallback: coerce odd createdAt values (integer/real) to ISO text
+      const rows = await prisma.$queryRawUnsafe<any[]>(`
+        SELECT
+          id,
+          username,
+          token,
+          owner,
+          repo,
+          command,
+          CASE
+            WHEN typeof(createdAt) = 'integer' THEN datetime(createdAt/1000, 'unixepoch')
+            WHEN typeof(createdAt) = 'real'    THEN datetime(createdAt/1000, 'unixepoch')
+            WHEN typeof(createdAt) = 'text'    THEN createdAt
+            ELSE datetime('now')
+          END AS createdAt
+        FROM GitCommand
+        ORDER BY id DESC
+        LIMIT 100
+      `);
+      return NextResponse.json(rows);
+    }
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : 'Unknown error';
     console.error('GET /api/commands error:', msg);
