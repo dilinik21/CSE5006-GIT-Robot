@@ -1,0 +1,7 @@
+services:
+  crud-demo:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - ORM_PROVIDER=${ORM_PROVIDER:-prisma}

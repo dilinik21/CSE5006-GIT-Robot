@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>CRUD React Demo</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>body{font-family:system-ui,Arial;margin:24px} pre{white-space:pre-wrap}</style>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+</head>
+<body>
+  <h1>CRUD React Demo (ORM: <span id="orm">prisma</span>)</h1>
+  <div id="root"></div>
+  <script>
+    document.getElementById('orm').textContent = (new URLSearchParams(location.search)).get('orm') || 'prisma';
+    const e = React.createElement;
+    function App(){
+      const [rows,setRows]=React.useState([]);
+      React.useEffect(()=>{ fetch('./commands.json').then(r=>r.json()).then(setRows).catch(()=>setRows([])) },[]);
+      return e('div',null,[
+        e('p',{key:'p'},'This demo ships with commands.json as a sample persisted list.'),
+        e('pre',{key:'pre'}, JSON.stringify(rows,null,2))
+      ]);
+    }
+    ReactDOM.createRoot(document.getElementById('root')).render(e(App));
+  </script>
+</body>
+</html>
