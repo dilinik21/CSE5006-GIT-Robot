@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "prisma generate",
+    "test": "playwright test",
+    "test:api": "playwright test tests/api.spec.ts",
+    "test:all": "playwright test tests/*.spec.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.17.1",
@@ -14,7 +18,9 @@
     "next": "15.5.0",
     "prisma": "^6.17.1",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "sequelize": "^6.37.7",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
