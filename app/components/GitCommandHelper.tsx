@@ -6,6 +6,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./GitCommandHelper.module.css";
 
 type OrmProvider = "prisma" | "sequelize";
+const DISABLE_EXECUTE = process.env.NEXT_PUBLIC_DISABLE_EXECUTE === "1";
 
 export default function GitCommandHelper() {
   const [formData, setFormData] = useState({
@@ -36,6 +37,7 @@ git push origin update-readme`;
     setCommandPreview(preview);
   }, [formData]);
 
+  // --- Execute (only if enabled) ---
   const handleExecute = async () => {
     setOutput({ text: "Executing...", success: true });
     try {
@@ -57,8 +59,8 @@ git push origin update-readme`;
     }
   };
 
+  // --- Save (always available) ---
   const handleSave = async () => {
-    // Save the current preview to the DB using the selected ORM
     setOutput({ text: "Saving to database...", success: true });
     try {
       const res = await fetch("/api/commands", {
@@ -69,14 +71,16 @@ git push origin update-readme`;
           owner: formData.owner,
           repo: formData.repository,
           command: commandPreview,
-          orm, // tell server which ORM to use
+          orm,
         }),
       });
       const data = await res.json();
 
       if (res.ok && data?.success) {
         setOutput({
-          text: `Saved to ${data.orm.toUpperCase()} successfully ✅ (id: ${data.data?.id ?? "n/a"})`,
+          text: `Saved to ${data.orm?.toUpperCase() || orm.toUpperCase()} successfully ✅ (id: ${
+            data.data?.id ?? "n/a"
+          })`,
           success: true,
         });
       } else {
@@ -131,50 +135,21 @@ git push origin update-readme`;
             </div>
           </div>
 
-          <div className={styles.formGroup}>
-            <label>GitHub Username</label>
-            <input
-              type="text"
-              name="username"
-              placeholder="Enter your GitHub username"
-              onChange={handleChange}
-              data-testid="input-username"
-            />
-          </div>
+          {/* GitHub fields */}
+          {["username", "token", "owner", "repository"].map((f) => (
+            <div key={f} className={styles.formGroup}>
+              <label>{f === "token" ? "Personal Access Token" : `GitHub ${f.charAt(0).toUpperCase() + f.slice(1)}`}</label>
+              <input
+                type={f === "token" ? "password" : "text"}
+                name={f}
+                placeholder={`Enter ${f}`}
+                onChange={handleChange}
+                data-testid={`input-${f}`}
+              />
+            </div>
+          ))}
 
-          <div className={styles.formGroup}>
-            <label>Personal Access Token</label>
-            <input
-              type="password"
-              name="token"
-              placeholder="Enter your GitHub token"
-              onChange={handleChange}
-              data-testid="input-token"
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label>Repository Owner</label>
-            <input
-              type="text"
-              name="owner"
-              placeholder="Repository owner username"
-              onChange={handleChange}
-              data-testid="input-owner"
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label>Repository Name</label>
-            <input
-              type="text"
-              name="repository"
-              placeholder="Repository name"
-              onChange={handleChange}
-              data-testid="input-repository"
-            />
-          </div>
-
+          {/* Buttons */}
           <div className={styles.buttonRow}>
             <button
               type="button"
@@ -187,19 +162,26 @@ git push origin update-readme`;
               Save
             </button>
 
-            <button
-              type="button"
-              className={styles.btnPrimary}
-              onClick={handleExecute}
-              disabled={!canExecute}
-              data-testid="btn-execute"
-              title={!canExecute ? "Fill all fields including token" : "Execute and push to GitHub"}
-            >
-              Execute
-            </button>
+            {!DISABLE_EXECUTE ? (
+              <button
+                type="button"
+                className={styles.btnPrimary}
+                onClick={handleExecute}
+                disabled={!canExecute}
+                data-testid="btn-execute"
+                title={!canExecute ? "Fill all fields including token" : "Execute and push to GitHub"}
+              >
+                Execute
+              </button>
+            ) : (
+              <p style={{ color: "#999", margin: "0.5rem 0" }}>
+                Execute disabled in cloud deploy (serverless restriction)
+              </p>
+            )}
           </div>
         </form>
 
+        {/* Preview + output */}
         <div>
           <h2 className={styles.commandsTitle}>Generated Git Command Preview</h2>
           <pre className={styles.commandBox} style={{ minWidth: "700px", whiteSpace: "pre-wrap" }}>
